@@ -1,0 +1,49 @@
+{
+    "name": "mundschenk-at/wp-data-storage",
+    "description": "An object oriented library for dealing with WordPress options and caching.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Peter Putzer",
+            "email": "github@mundschenk.at",
+            "homepage": "https://code.mundschenk.at",
+            "role": "Developer"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "dev-master",
+        "wp-coding-standards/wpcs": "^0.14.0",
+        "wimg/php-compatibility": "^8.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4",
+        "phpunit/phpunit": "5.*|6.*",
+        "mikey179/vfsStream": "~1",
+        "brain/monkey": "^2.0@dev"
+    },
+
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+
+    "autoload": {
+        "classmap": ["src/"]
+    },
+    "autoload-dev": {
+        "classmap": ["tests/"]
+    },
+
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit --testsuite wp-data-storage"
+        ],
+        "coverage": [
+            "@test -- --coverage-html tests/coverage"
+        ],
+        "phpcs": [
+            "vendor/bin/phpcs -p -s src/ tests/ --extensions=php"
+        ]
+    }
+}
