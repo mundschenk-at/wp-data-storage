@@ -57,7 +57,7 @@ class Cache extends Abstract_Cache {
 
 		$this->group           = ! isset( $group ) ? $prefix : $group;
 		$this->incrementor_key = "{$prefix}cache_incrementor";
-		$this->incrementor     = \wp_cache_get( $this->incrementor_key, $this->group );
+		$this->incrementor     = (int) \wp_cache_get( $this->incrementor_key, $this->group );
 
 		parent::__construct( $prefix );
 	}
