@@ -58,11 +58,12 @@ class Transients_Test extends TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp() { // @codingStandardsIgnoreLine
-		Functions\expect( 'get_transient' )->once()->with( self::INCREMENTOR_KEY )->andReturn( 999 );
-
-		$this->transients = m::mock( Transients::class, [ self::PREFIX ] )->shouldAllowMockingProtectedMethods()->makePartial();
-
 		parent::setUp();
+
+		$this->transients = m::mock( Transients::class )->shouldAllowMockingProtectedMethods()->makePartial()
+			->shouldReceive( 'get' )->once()->with( self::INCREMENTOR_KEY, true )->andReturn( 999 )
+			->getMock();
+		$this->transients->__construct( self::PREFIX );
 	}
 
 	/**
@@ -80,9 +81,8 @@ class Transients_Test extends TestCase {
 	 * @uses \Mundschenk\Data_Storage\Abstract_Cache::__construct
 	 */
 	public function test___construct() {
-		Functions\expect( 'get_transient' )->once()->with( 'some_prefix_transients_incrementor' )->andReturn( 0 );
-
 		$transients = m::mock( Transients::class )->shouldAllowMockingProtectedMethods()->makePartial()
+			->shouldReceive( 'get' )->once()->with( 'some_prefix_transients_incrementor', true )->andReturn( 0 )
 			->shouldReceive( 'invalidate' )->once()
 			->getMock();
 		$transients->__construct( 'some_prefix_' );
@@ -120,11 +120,11 @@ class Transients_Test extends TestCase {
 			$this->transients->shouldReceive( 'get_keys_from_database' )->once()->andReturn( $expected_keys );
 
 			foreach ( $expected_keys as $raw_key ) {
-				Functions\expect( 'delete_transient' )->once()->with( $raw_key );
+				$this->transients->shouldReceive( 'delete' )->once()->with( $raw_key, true );
 			}
 		}
 
-		Functions\expect( 'set_transient' )->once()->with( self::INCREMENTOR_KEY, m::type( 'int' ) );
+		$this->transients->shouldReceive( 'set' )->once()->with( self::INCREMENTOR_KEY, m::type( 'int' ), 0, true );
 		Functions\expect( 'wp_using_ext_object_cache' )->once()->andReturn( $object_cache_enabled );
 
 		$this->transients->invalidate();

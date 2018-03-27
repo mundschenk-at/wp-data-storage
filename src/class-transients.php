@@ -40,7 +40,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @var string
 	 */
-	private $incrementor_key;
+	protected $incrementor_key;
 
 	/**
 	 * Create new cache instance.
@@ -48,8 +48,8 @@ class Transients extends Abstract_Cache {
 	 * @param string $prefix The prefix automatically added to transient names.
 	 */
 	public function __construct( $prefix ) {
-		$this->incrementor_key = "{$prefix}transients_incrementor";
-		$this->incrementor     = \get_transient( $this->incrementor_key );
+		$this->incrementor_key = $prefix . 'transients_incrementor';
+		$this->incrementor     = $this->get( $this->incrementor_key, true );
 
 		parent::__construct( $prefix );
 	}
@@ -62,13 +62,13 @@ class Transients extends Abstract_Cache {
 		if ( ! \wp_using_ext_object_cache() ) {
 			// Clean up old transients.
 			foreach ( $this->get_keys_from_database() as $old_transient ) {
-				\delete_transient( $old_transient );
+				$this->delete( $old_transient, true );
 			}
 		}
 
 		// Update incrementor.
 		$this->incrementor = time();
-		\set_transient( $this->incrementor_key, $this->incrementor );
+		$this->set( $this->incrementor_key, $this->incrementor, 0, true );
 	}
 
 	/**
@@ -99,11 +99,12 @@ class Transients extends Abstract_Cache {
 	 * Retrieves a cached value.
 	 *
 	 * @param string $key The cache key.
+	 * @param bool   $raw Optional. Use the raw key name (i.e. don't call get_key). Default false.
 	 *
 	 * @return mixed
 	 */
-	public function get( $key ) {
-		return \get_transient( $this->get_key( $key ) );
+	public function get( $key, $raw = false ) {
+		return \get_transient( $raw ? $key : $this->get_key( $key ) );
 	}
 
 	/**
@@ -133,11 +134,12 @@ class Transients extends Abstract_Cache {
 	 * @param string $key       The cache key.
 	 * @param mixed  $value     The value to store.
 	 * @param int    $duration  Optional. The duration in seconds. Default 0 (no expiration).
+	 * @param bool   $raw       Optional. Use the raw key name (i.e. don't call get_key). Default false.
 	 *
 	 * @return bool True if the cache could be set successfully.
 	 */
-	public function set( $key, $value, $duration = 0 ) {
-		return \set_transient( $this->get_key( $key ), $value, $duration );
+	public function set( $key, $value, $duration = 0, $raw = false ) {
+		return \set_transient( $raw ? $key : $this->get_key( $key ), $value, $duration );
 	}
 
 	/**
@@ -164,11 +166,12 @@ class Transients extends Abstract_Cache {
 	 * Deletes an entry from the cache.
 	 *
 	 * @param string $key The cache key root.
+	 * @param bool   $raw Optional. Use the raw key name (i.e. don't call get_key). Default false.
 	 *
 	 * @return bool True on successful removal, false on failure.
 	 */
-	public function delete( $key ) {
-		return \delete_transient( $this->get_key( $key ) );
+	public function delete( $key, $raw = false ) {
+		return \delete_transient( $raw ? $key : $this->get_key( $key ) );
 	}
 
 	/**
