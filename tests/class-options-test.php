@@ -46,7 +46,7 @@ class Options_Test extends TestCase {
 	/**
 	 * Test fixture.
 	 *
-	 * @var \Mundschenk\Data_Storage\Cache
+	 * @var \Mundschenk\Data_Storage\Options
 	 */
 	protected $options;
 
