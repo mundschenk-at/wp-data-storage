@@ -153,7 +153,7 @@ class Site_Transients_Test extends TestCase {
 		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( $dummy_result );
 
 		Functions\expect( 'get_current_network_id' )->once()->with()->andReturn( 1 );
-		Functions\expect( 'wp_list_pluck' )->once()->with( $dummy_result, 'meta_name' )->andReturn( [ 'typo_foobar' ] );
+		Functions\expect( 'wp_list_pluck' )->once()->with( $dummy_result, 'meta_key' )->andReturn( [ 'typo_foobar' ] );
 
 		$this->assertSame( [ 'typo_foobar' ], $this->transients->get_keys_from_database() );
 	}

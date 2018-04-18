@@ -49,13 +49,13 @@ class Site_Transients extends Transients {
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT meta_name FROM {$wpdb->sitemeta} WHERE meta_name like %s and site_id = %d",
+				"SELECT meta_key FROM {$wpdb->sitemeta} WHERE meta_key like %s and site_id = %d",
 				self::TRANSIENT_SQL_PREFIX . "{$this->get_prefix()}%", \get_current_network_id()
 			),
 			ARRAY_A
 		); // WPCS: db call ok, cache ok.
 
-		return \str_replace( self::TRANSIENT_SQL_PREFIX, '', \wp_list_pluck( $results, 'meta_name' ) );
+		return \str_replace( self::TRANSIENT_SQL_PREFIX, '', \wp_list_pluck( $results, 'meta_key' ) );
 	}
 
 	/**
