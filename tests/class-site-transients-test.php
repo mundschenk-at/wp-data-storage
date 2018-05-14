@@ -165,6 +165,8 @@ class Site_Transients_Test extends TestCase {
 	 * Tests get_keys_from_database in multisite.
 	 *
 	 * @covers ::get_keys_from_database
+	 *
+	 * @uses \Mundschenk\Data_Storage\Transients::get_keys_from_database
 	 */
 	public function test_get_keys_from_database_singlesite() {
 		$dummy_result = [ [ 'option_name' => Site_Transients::TRANSIENT_SQL_PREFIX . 'typo_foobar' ] ];
