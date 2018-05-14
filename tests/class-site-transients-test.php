@@ -133,27 +133,59 @@ class Site_Transients_Test extends TestCase {
 	}
 
 	/**
-	 * Tests get_keys_from_database.
+	 * Tests get_keys_from_database in multisite.
 	 *
 	 * @covers ::get_keys_from_database
 	 */
-	public function test_get_keys_from_database() {
+	public function test_get_keys_from_database_multisite() {
 		$dummy_result = [ [ 'option_name' => Site_Transients::TRANSIENT_SQL_PREFIX . 'typo_foobar' ] ];
 
+		// Prepare test dummies.
 		global $wpdb;
+		$wpdb           = m::mock( 'wpdb' ); // WPCS: override ok.
+		$wpdb->sitemeta = 'wp_sitemeta';
 
 		if ( ! defined( 'ARRAY_A' ) ) {
 			define( 'ARRAY_A', 'array' );
 		}
 
-		$wpdb           = m::mock( 'wpdb' ); // WPCS: override ok.
-		$wpdb->sitemeta = 'wp_sitemeta';
+		Functions\expect( 'is_multisite' )->once()->andReturn( true );
+
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
 		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%', 1 )->andReturn( 'fake SQL string' );
 		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( $dummy_result );
 
 		Functions\expect( 'get_current_network_id' )->once()->with()->andReturn( 1 );
 		Functions\expect( 'wp_list_pluck' )->once()->with( $dummy_result, 'meta_key' )->andReturn( [ 'typo_foobar' ] );
+
+		$this->assertSame( [ 'typo_foobar' ], $this->transients->get_keys_from_database() );
+	}
+
+	/**
+	 * Tests get_keys_from_database in multisite.
+	 *
+	 * @covers ::get_keys_from_database
+	 */
+	public function test_get_keys_from_database_singlesite() {
+		$dummy_result = [ [ 'option_name' => Site_Transients::TRANSIENT_SQL_PREFIX . 'typo_foobar' ] ];
+
+		// Prepare test dummies.
+		global $wpdb;
+		$wpdb          = m::mock( 'wpdb' ); // WPCS: override ok.
+		$wpdb->options = 'wp_options';
+
+		if ( ! defined( 'ARRAY_A' ) ) {
+			define( 'ARRAY_A', 'array' );
+		}
+
+		Functions\expect( 'is_multisite' )->once()->andReturn( false );
+
+		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( $dummy_result );
+
+		Functions\expect( 'get_current_network_id' )->never();
+		Functions\expect( 'wp_list_pluck' )->once()->with( $dummy_result, 'option_name' )->andReturn( [ 'typo_foobar' ] );
 
 		$this->assertSame( [ 'typo_foobar' ], $this->transients->get_keys_from_database() );
 	}
