@@ -250,9 +250,11 @@ class Site_Transients_Test extends TestCase {
 		$raw_key = 'foo';
 
 		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( \base64_encode( \gzencode( \serialize( new \stdClass() ) ) ) ); // @codingStandardsIgnoreLine
-		$this->transients->shouldReceive( 'maybe_fix_object' )->once()->with( m::type( \stdClass::class ) )->andReturnUsing( function( $object ) {
-			return $object;
-		} );
+		$this->transients->shouldReceive( 'maybe_fix_object' )->once()->with( m::type( \stdClass::class ) )->andReturnUsing(
+			function( $object ) {
+				return $object;
+			}
+		);
 
 		$this->assertInstanceOf( \stdClass::class, $this->transients->get_large_object( $raw_key ) );
 	}
