@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2019 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -142,7 +142,7 @@ class Site_Transients_Test extends TestCase {
 
 		// Prepare test dummies.
 		global $wpdb;
-		$wpdb           = m::mock( 'wpdb' ); // WPCS: override ok.
+		$wpdb           = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->sitemeta = 'wp_sitemeta';
 
 		if ( ! defined( 'ARRAY_A' ) ) {
@@ -173,7 +173,7 @@ class Site_Transients_Test extends TestCase {
 
 		// Prepare test dummies.
 		global $wpdb;
-		$wpdb          = m::mock( 'wpdb' ); // WPCS: override ok.
+		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
 
 		if ( ! defined( 'ARRAY_A' ) ) {

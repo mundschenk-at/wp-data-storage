@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2019 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -146,7 +146,7 @@ class Transients_Test extends TestCase {
 			define( 'ARRAY_A', 'array' );
 		}
 
-		$wpdb          = m::mock( 'wpdb' ); // WPCS: override ok.
+		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
 		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
