@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2019 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -159,7 +159,9 @@ class Transients extends Abstract_Cache {
 			return false; // @codeCoverageIgnore
 		}
 
-		return $this->set( $key, \base64_encode( $compressed ), $duration );
+		// base64_encode() is used to safely store the gzipped serialized object
+		// in the WordPress database.
+		return $this->set( $key, \base64_encode( $compressed ), $duration ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 	}
 
 	/**
