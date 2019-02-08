@@ -1,28 +1,20 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Plugin Coding Standards">
-	<description>
-		A custom set of code standard rules to check for WordPress plugins:
+<ruleset name="MundschenkWordPressPlugin">
+	<!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
+	<!-- See https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/blob/develop/WordPress-Core/ruleset.xml -->
 
-		* See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
-    * See https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/blob/develop/WordPress-Core/ruleset.xml
-	</description>
+	<!-- Set a description for this ruleset. -->
+	<description>A custom set of code standard rules to check for WordPress plugins.</description>
 
+	<config name="minimum_supported_wp_version" value="4.4"/>
+	<config name="testVersion" value="5.6-"/>
 
 	<!-- Include the WordPress ruleset, with exclusions. -->
 	<rule ref="WordPress">
-		<config name="minimum_supported_wp_version" value="4.6"/>
-
-		<exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" />
-		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
-		<exclude name="PEAR.Functions.FunctionCallSignature.Indent" />
 		<exclude name="Generic.Functions.FunctionCallArgumentSpacing" />
 	</rule>
-
+	<rule ref="WordPress-Docs" />
 	<rule ref="WordPress-Extra" />
-
-	<rule ref="Squiz.Commenting.LongConditionClosingComment">
-		<exclude name="Squiz.Commenting.LongConditionClosingComment" />
-	</rule>
 
 	<rule ref="WordPress.Arrays.MultipleStatementAlignment">
 		<properties>
@@ -31,8 +23,35 @@
 		</properties>
 	</rule>
 
-	<!-- Include sniffs for PHP cross-version compatibility. -->
-	<rule ref="PHPCompatibility">
-		<config name="testVersion" value="5.2-7.2"/>
+	<rule ref="WordPress.PHP.NoSilencedErrors">
+		<properties>
+			<property name="use_default_whitelist" value="true"/>
+			<property name="custom_whitelist" type="array">
+				<element value="imagecreatefrompng"/>
+			</property>
+		</properties>
 	</rule>
+
+	<!-- This library does not use the translation functions, but just in case. -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="dummy"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- There should not be any globals, except in the tests. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="mundschenk"/>
+			</property>
+		</properties>
+
+		<exclude-pattern>*/tests/*\.php</exclude-pattern>
+	</rule>
+
+	<!-- Include sniffs for PHP cross-version compatibility. -->
+	<rule ref="PHPCompatibilityWP" />
 </ruleset>

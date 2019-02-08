@@ -17,12 +17,13 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3",
-        "wp-coding-standards/wpcs": "^1.1",
-        "wimg/php-compatibility": "^8.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4",
+        "wp-coding-standards/wpcs": "^2",
+        "phpcompatibility/phpcompatibility-wp": "^2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
         "phpunit/phpunit": "5.*|6.*|7.*",
-        "mikey179/vfsStream": "~1",
-        "brain/monkey": "^2.2"
+        "mikey179/vfsstream": "~1",
+        "brain/monkey": "^2.2",
+        "roave/security-advisories": "dev-master"
     },
 
     "minimum-stability": "dev",
@@ -43,7 +44,7 @@
             "@test -- --coverage-html tests/coverage"
         ],
         "phpcs": [
-            "vendor/bin/phpcs -p -s src/ tests/ --extensions=php"
+            "vendor/bin/phpcs -ps src/ tests/ --extensions=php"
         ]
     }
 }
