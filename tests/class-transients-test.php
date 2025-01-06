@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2019 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,20 +57,13 @@ class Transients_Test extends TestCase {
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->transients = m::mock( Transients::class )->shouldAllowMockingProtectedMethods()->makePartial()
 			->shouldReceive( 'get' )->once()->with( self::INCREMENTOR_KEY, true )->andReturn( 999 )
 			->getMock();
 		$this->transients->__construct( self::PREFIX );
-	}
-
-	/**
-	 * Necesssary clean-up work.
-	 */
-	protected function tearDown() { // @codingStandardsIgnoreLine
-		parent::tearDown();
 	}
 
 	/**
@@ -259,7 +252,7 @@ class Transients_Test extends TestCase {
 	 */
 	public function test_delete() {
 		$raw_key = 'foo';
-		$key     = $this->invokeMethod( $this->transients, 'get_key', [ $raw_key ] );
+		$key     = $this->invoke_method( $this->transients, 'get_key', [ $raw_key ] );
 
 		Functions\expect( 'delete_transient' )->once()->with( $key )->andReturn( true );
 
@@ -276,7 +269,7 @@ class Transients_Test extends TestCase {
 		$fake_object        = unserialize( $fake_object_string ); // @codingStandardsIgnoreLine
 
 		// Unfortunately, serialize and  unserialize cannot be mocked.
-		$object = $this->invokeMethod( $this->transients, 'maybe_fix_object', [ $fake_object ] );
+		$object = $this->invoke_method( $this->transients, 'maybe_fix_object', [ $fake_object ] );
 
 		$this->assertTrue( $object !== $fake_object );
 	}

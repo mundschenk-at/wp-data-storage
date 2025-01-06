@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,18 +57,11 @@ class Cache_Test extends TestCase {
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		Functions\expect( 'wp_cache_get' )->once()->with( self::INCREMENTOR_KEY, self::GROUP )->andReturn( 1 );
 		$this->cache = m::mock( Cache::class, [ self::PREFIX, self::GROUP ] )->makePartial();
-	}
-
-	/**
-	 * Necesssary clean-up work.
-	 */
-	protected function tearDown() { // @codingStandardsIgnoreLine
-		parent::tearDown();
 	}
 
 	/**
@@ -112,7 +105,7 @@ class Cache_Test extends TestCase {
 	 */
 	public function test_get() {
 		$raw_key = 'foo';
-		$key     = $this->invokeMethod( $this->cache, 'get_key', [ $raw_key ] );
+		$key     = $this->invoke_method( $this->cache, 'get_key', [ $raw_key ] );
 
 		Functions\expect( 'wp_cache_get' )->once()->with( $key, self::GROUP, false, null )->andReturn( 'bar' );
 
@@ -130,7 +123,7 @@ class Cache_Test extends TestCase {
 		$value    = 'bar';
 		$raw_key  = 'foo';
 		$duration = 99;
-		$key      = $this->invokeMethod( $this->cache, 'get_key', [ $raw_key ] );
+		$key      = $this->invoke_method( $this->cache, 'get_key', [ $raw_key ] );
 
 		Functions\expect( 'wp_cache_set' )->once()->with( $key, $value, self::GROUP, $duration )->andReturn( true );
 
@@ -146,7 +139,7 @@ class Cache_Test extends TestCase {
 	 */
 	public function test_delete() {
 		$raw_key = 'foo';
-		$key     = $this->invokeMethod( $this->cache, 'get_key', [ $raw_key ] );
+		$key     = $this->invoke_method( $this->cache, 'get_key', [ $raw_key ] );
 
 		Functions\expect( 'wp_cache_delete' )->once()->with( $key, self::GROUP )->andReturn( true );
 
