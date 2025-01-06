@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,21 +42,12 @@ use Mockery as m;
  */
 class Abstract_Cache_Test extends TestCase {
 
-
-
 	/**
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
-		parent::setUp();
-	}
-
-	/**
-	 * Necesssary clean-up work.
-	 */
-	protected function tearDown() { // @codingStandardsIgnoreLine
-		parent::tearDown();
+	protected function set_up() { // @codingStandardsIgnoreLine
+		parent::set_up();
 	}
 
 	/**
@@ -68,7 +59,7 @@ class Abstract_Cache_Test extends TestCase {
 		$cache = m::mock( Abstract_Cache::class )->makePartial();
 		$cache->shouldReceive( 'invalidate' )->once();
 
-		$this->invokeMethod( $cache, '__construct', [ 'prefix_' ] );
+		$this->invoke_method( $cache, '__construct', [ 'prefix_' ] );
 
 		$this->assertInstanceOf( Abstract_Cache::class, $cache );
 	}
@@ -85,10 +76,10 @@ class Abstract_Cache_Test extends TestCase {
 
 		// Prepare object.
 		$cache = m::mock( Abstract_Cache::class )->makePartial();
-		$this->setValue( $cache, 'incrementor', $incrementor, Abstract_Cache::class );
-		$this->setValue( $cache, 'prefix', $prefix, Abstract_Cache::class );
+		$this->set_value( $cache, 'incrementor', $incrementor, Abstract_Cache::class );
+		$this->set_value( $cache, 'prefix', $prefix, Abstract_Cache::class );
 
-		$this->assertSame( "{$prefix}{$incrementor}_{$key}", $this->invokeMethod( $cache, 'get_key', [ $key ] ) );
+		$this->assertSame( "{$prefix}{$incrementor}_{$key}", $this->invoke_method( $cache, 'get_key', [ $key ] ) );
 	}
 
 	/**
@@ -99,8 +90,8 @@ class Abstract_Cache_Test extends TestCase {
 	public function test_get_prefix() {
 		// Prepare object.
 		$cache = m::mock( Abstract_Cache::class )->makePartial();
-		$this->setValue( $cache, 'prefix', 'foobar', Abstract_Cache::class );
+		$this->set_value( $cache, 'prefix', 'foobar', Abstract_Cache::class );
 
-		$this->assertSame( 'foobar', $this->invokeMethod( $cache, 'get_prefix', [] ) );
+		$this->assertSame( 'foobar', $this->invoke_method( $cache, 'get_prefix', [] ) );
 	}
 }

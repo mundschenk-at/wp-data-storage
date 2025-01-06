@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -54,17 +54,10 @@ class Options_Test extends TestCase {
 	 * Sets up the fixture, for example, opens a network connection.
 	 * This method is called before a test is executed.
 	 */
-	protected function setUp() { // @codingStandardsIgnoreLine
+	protected function set_up() { // @codingStandardsIgnoreLine
 		$this->options = m::mock( Options::class )->makePartial();
 
-		parent::setUp();
-	}
-
-	/**
-	 * Necesssary clean-up work.
-	 */
-	protected function tearDown() { // @codingStandardsIgnoreLine
-		parent::tearDown();
+		parent::set_up();
 	}
 
 	/**
@@ -78,7 +71,7 @@ class Options_Test extends TestCase {
 		$cache = m::mock( Options::class, [ 'my_prefix' ] )->makePartial();
 
 		$this->assertInstanceOf( Options::class, $cache );
-		$this->assertAttributeSame( 'my_prefix', 'prefix', $cache );
+		$this->assert_attribute_same( 'my_prefix', 'prefix', $cache );
 	}
 
 	/**
@@ -200,7 +193,7 @@ class Options_Test extends TestCase {
 	public function test_get_name() {
 		$raw_key = 'foo';
 
-		$this->setValue( $this->options, 'prefix', 'BAR_', Options::class );
+		$this->set_value( $this->options, 'prefix', 'BAR_', Options::class );
 		$this->assertSame( "BAR_{$raw_key}", $this->options->get_name( $raw_key ) );
 	}
 }
