@@ -38,7 +38,7 @@ class Network_Options extends Options {
 	 *
 	 * @var int
 	 */
-	private $network_id;
+	private int $network_id;
 
 	/**
 	 * Create new Network Options instance.
@@ -46,8 +46,8 @@ class Network_Options extends Options {
 	 * @param string   $prefix     The prefix automatically added to option names.
 	 * @param int|null $network_id Optional. The network ID or null for the current network. Default null.
 	 */
-	public function __construct( $prefix, $network_id = null ) {
-		$this->network_id = ! empty( $network_id ) ? $network_id : \get_current_network_id();
+	public function __construct( string $prefix, ?int $network_id = null ) {
+		$this->network_id = $network_id ?? \get_current_network_id();
 
 		parent::__construct( $prefix );
 	}
@@ -63,7 +63,7 @@ class Network_Options extends Options {
 	 *
 	 * @return mixed Value set for the option.
 	 */
-	public function get( $option, $default_value = null, $raw = false ) {
+	public function get( string $option, $default_value = null, bool $raw = false ) {
 		$value = \get_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ), $default_value );
 
 		if ( is_array( $default_value ) && '' === $value ) {
@@ -84,7 +84,7 @@ class Network_Options extends Options {
 	 *
 	 * @return bool False if value was not updated and true if value was updated.
 	 */
-	public function set( $option, $value, $autoload = true, $raw = false ) {
+	public function set( string $option, $value, bool $autoload = true, bool $raw = false ): bool {
 		return \update_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ), $value );
 	}
 
@@ -96,7 +96,7 @@ class Network_Options extends Options {
 	 *
 	 * @return bool True, if option is successfully deleted. False on failure.
 	 */
-	public function delete( $option, $raw = false ) {
+	public function delete( string $option, bool $raw = false ): bool {
 		return \delete_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ) );
 	}
 }

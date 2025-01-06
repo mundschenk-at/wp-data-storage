@@ -55,7 +55,7 @@ class Options_Test extends TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function set_up() { // @codingStandardsIgnoreLine
-		$this->options = m::mock( Options::class )->makePartial();
+		$this->options = m::mock( Options::class, [ 'my_prefix_' ] )->makePartial();
 
 		parent::set_up();
 	}

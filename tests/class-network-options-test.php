@@ -63,8 +63,7 @@ class Network_Options_Test extends TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function set_up() {
-		$this->options = m::mock( Network_Options::class )->makePartial();
-		$this->set_value( $this->options, 'network_id', self::NETWORK_ID, Network_Options::class );
+		$this->options = m::mock( Network_Options::class, [ 'my_prefix_', self::NETWORK_ID ] )->makePartial();
 
 		parent::set_up();
 	}

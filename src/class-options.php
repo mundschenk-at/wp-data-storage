@@ -38,14 +38,14 @@ class Options {
 	 *
 	 * @var string
 	 */
-	private $prefix;
+	private string $prefix;
 
 	/**
 	 * Create new Options instance.
 	 *
 	 * @param string $prefix The prefix automatically added to option names.
 	 */
-	public function __construct( $prefix ) {
+	public function __construct( string $prefix ) {
 		$this->prefix = $prefix;
 	}
 
@@ -60,7 +60,7 @@ class Options {
 	 *
 	 * @return mixed Value set for the option.
 	 */
-	public function get( $option, $default_value = null, $raw = false ) {
+	public function get( string $option, $default_value = null, bool $raw = false ) {
 		$value = \get_option( $raw ? $option : $this->get_name( $option ), $default_value );
 
 		if ( is_array( $default_value ) && '' === $value ) {
@@ -83,7 +83,7 @@ class Options {
 	 *
 	 * @return bool False if value was not updated and true if value was updated.
 	 */
-	public function set( $option, $value, $autoload = true, $raw = false ) {
+	public function set( string $option, $value, bool $autoload = true, bool $raw = false ) {
 		return \update_option( $raw ? $option : $this->get_name( $option ), $value, $autoload );
 	}
 
@@ -95,7 +95,7 @@ class Options {
 	 *
 	 * @return bool True, if option is successfully deleted. False on failure.
 	 */
-	public function delete( $option, $raw = false ) {
+	public function delete( string $option, bool $raw = false ): bool {
 		return \delete_option( $raw ? $option : $this->get_name( $option ) );
 	}
 
@@ -106,7 +106,7 @@ class Options {
 	 *
 	 * @return string
 	 */
-	public function get_name( $option ) {
+	public function get_name( string $option ): string {
 		return "{$this->prefix}{$option}";
 	}
 }

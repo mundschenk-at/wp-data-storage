@@ -40,7 +40,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @var string
 	 */
-	protected $incrementor_key;
+	protected string $incrementor_key;
 
 	/**
 	 * Create new cache instance.
@@ -49,7 +49,7 @@ class Transients extends Abstract_Cache {
 	 */
 	public function __construct( $prefix ) {
 		$this->incrementor_key = $prefix . 'transients_incrementor';
-		$this->incrementor     = $this->get( $this->incrementor_key, true );
+		$this->incrementor     = (int) $this->get( $this->incrementor_key, true ); // @phpstan-ignore cast.int
 
 		parent::__construct( $prefix );
 	}
@@ -57,7 +57,7 @@ class Transients extends Abstract_Cache {
 	/**
 	 * Invalidate all cached elements by reseting the incrementor.
 	 */
-	public function invalidate() {
+	public function invalidate(): void {
 
 		if ( ! \wp_using_ext_object_cache() ) {
 			// Clean up old transients.
@@ -76,7 +76,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return string[]
 	 */
-	public function get_keys_from_database() {
+	public function get_keys_from_database(): array {
 		/**
 		 * WordPress database handler.
 		 *
@@ -104,7 +104,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return mixed
 	 */
-	public function get( $key, $raw = false ) {
+	public function get( string $key, bool $raw = false ) {
 		return \get_transient( $raw ? $key : $this->get_key( $key ) );
 	}
 
@@ -115,7 +115,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return mixed
 	 */
-	public function get_large_object( $key ) {
+	public function get_large_object( string $key ) {
 		$encoded = $this->get( $key );
 		if ( false === $encoded ) {
 			return false;
@@ -139,7 +139,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return bool True if the cache could be set successfully.
 	 */
-	public function set( $key, $value, $duration = 0, $raw = false ) {
+	public function set( string $key, $value, int $duration = 0, bool $raw = false ): bool {
 		return \set_transient( $raw ? $key : $this->get_key( $key ), $value, $duration );
 	}
 
@@ -153,7 +153,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return bool True if the cache could be set successfully.
 	 */
-	public function set_large_object( $key, $value, $duration = 0 ) {
+	public function set_large_object( string $key, $value, int $duration = 0 ): bool {
 		$compressed = \gzencode( \serialize( $value ) ); // @codingStandardsIgnoreLine
 
 		if ( false === $compressed ) {
@@ -173,7 +173,7 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return bool True on successful removal, false on failure.
 	 */
-	public function delete( $key, $raw = false ) {
+	public function delete( string $key, bool $raw = false ): bool {
 		return \delete_transient( $raw ? $key : $this->get_key( $key ) );
 	}
 
