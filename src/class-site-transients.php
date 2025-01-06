@@ -54,7 +54,8 @@ class Site_Transients extends Transients {
 
 		$results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT meta_key FROM {$wpdb->sitemeta} WHERE meta_key like %s and site_id = %d",
+				'SELECT meta_key FROM %i WHERE meta_key like %s and site_id = %d',
+				$wpdb->sitemeta,
 				self::TRANSIENT_SQL_PREFIX . "{$this->get_prefix()}%",
 				\get_current_network_id()
 			),

@@ -14,7 +14,7 @@ An object oriented library for dealing with WordPress options and caching.
 ## Requirements
 
 *   PHP 7.4.0 or above
-*   WordPress 6.0 or higher
+*   WordPress 6.2 or higher (for the `%i` placeholder for `wpdb::prepare`)
 
 ## Installation
 
