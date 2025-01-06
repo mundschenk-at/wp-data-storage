@@ -13,17 +13,22 @@
     ],
 
     "require": {
-        "php": ">=5.6.0"
+        "php": ">=7.4.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.3",
-        "wp-coding-standards/wpcs": "^2",
+        "wp-coding-standards/wpcs": "^3",
         "phpcompatibility/phpcompatibility-wp": "^2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5",
-        "phpunit/phpunit": "5.*|6.*|7.*",
+        "sirbrillig/phpcs-variable-analysis": "^2.8",
+        "roave/security-advisories": "dev-master",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1",
+        "mundschenk-at/phpunit-cross-version": "dev-master",
+        "phpunit/phpunit": "9.*||10.*||11.*",
         "mikey179/vfsstream": "~1",
-        "brain/monkey": "^2.2",
-        "roave/security-advisories": "dev-master"
+        "szepeviktor/phpstan-wordpress": "^2",
+        "phpstan/extension-installer": "^1.2",
+        "phpstan/phpstan-phpunit": "^2",
+        "phpstan/phpstan-mockery": "^2.0",
+        "shish/safe": "^2"
     },
 
     "minimum-stability": "dev",
@@ -37,14 +42,29 @@
     },
 
     "scripts": {
+        "phpcs": [
+            "phpcs -ps src/ tests/ --extensions=php --cache"
+        ],
+        "phpcs:fix": [
+            "phpcbf -ps src/ tests/ --extensions=php --cache"
+        ],
         "test": [
-            "vendor/bin/phpunit --testsuite wp-data-storage"
+            "phpunit --testsuite wp-data-storage"
         ],
         "coverage": [
-            "@test -- --coverage-html tests/coverage"
+            "XDEBUG_MODE=coverage phpunit --testsuite wp-data-storage --coverage-html tests/coverage"
         ],
-        "phpcs": [
-            "vendor/bin/phpcs -ps src/ tests/ --extensions=php"
+        "phpstan": [
+            "phpstan analyze --memory-limit 1G"
+        ],
+        "phpstan-clean": [
+            "phpstan clear-result-cache && phpstan analyze --memory-limit 1G"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true
+        }
     }
 }

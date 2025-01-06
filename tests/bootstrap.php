@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2018 Peter Putzer.
+ * Copyright 2018-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,8 @@
  *
  * @package mundschenk-at/wp-data-storage/tests
  * @license http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @version 2.0-alpha.1
  */
 
 /**
