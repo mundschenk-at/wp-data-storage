@@ -142,7 +142,7 @@ class Transients_Test extends TestCase {
 		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
-		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), $wpdb->options, Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
 		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( $dummy_result );
 
 		Functions\expect( 'wp_list_pluck' )->once()->with( $dummy_result, 'option_name' )->andReturn( [ 'typo_foobar' ] );

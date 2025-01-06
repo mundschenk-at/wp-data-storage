@@ -86,7 +86,8 @@ class Transients extends Abstract_Cache {
 
 		$results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
-				"SELECT option_name FROM {$wpdb->options} WHERE option_name like %s",
+				'SELECT option_name FROM %i WHERE option_name like %s',
+				$wpdb->options,
 				static::TRANSIENT_SQL_PREFIX . "{$this->get_prefix()}%"
 			),
 			ARRAY_A
