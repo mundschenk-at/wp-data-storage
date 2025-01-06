@@ -244,8 +244,8 @@ class Site_Transients_Test extends TestCase {
 
 		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( \base64_encode( \gzencode( \serialize( new \stdClass() ) ) ) ); // @codingStandardsIgnoreLine
 		$this->transients->shouldReceive( 'maybe_fix_object' )->once()->with( m::type( \stdClass::class ) )->andReturnUsing(
-			function( $object ) {
-				return $object;
+			static function ( object $o ): object {
+				return $o;
 			}
 		);
 

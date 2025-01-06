@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2019 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -179,18 +179,20 @@ class Transients extends Abstract_Cache {
 	/**
 	 * Tries to fix object cache implementations sometimes returning __PHP_Incomplete_Class.
 	 *
+	 * @since 2.0.0 Parameter `$object` renamed to `$maybe_object`.
+	 *
 	 * Originally based on http://stackoverflow.com/a/1173769/6646342 and refactored
 	 * for PHP 7.2 compatibility.
 	 *
-	 * @param  object $object An object that should have been unserialized, but may be of __PHP_Incomplete_Class.
+	 * @param  object $maybe_object An object that should have been unserialized, but may be of __PHP_Incomplete_Class.
 	 *
-	 * @return object         The object with its real class.
+	 * @return object               The object with its real class.
 	 */
-	protected function maybe_fix_object( $object ) {
-		if ( '__PHP_Incomplete_Class' === \get_class( $object ) ) {
-			$object = \unserialize( \serialize( $object ) ); // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize,WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+	protected function maybe_fix_object( $maybe_object ) {
+		if ( '__PHP_Incomplete_Class' === \get_class( $maybe_object ) ) {
+			$maybe_object = \unserialize( \serialize( $maybe_object ) ); // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize,WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 		}
 
-		return $object;
+		return $maybe_object;
 	}
 }
