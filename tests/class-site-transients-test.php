@@ -145,7 +145,7 @@ class Site_Transients_Test extends TestCase {
 		Functions\expect( 'is_multisite' )->once()->andReturn( true );
 
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
-		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%', 1 )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), $wpdb->sitemeta, Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%', 1 )->andReturn( 'fake SQL string' );
 		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( $dummy_result );
 
 		Functions\expect( 'get_current_network_id' )->once()->with()->andReturn( 1 );
@@ -176,7 +176,7 @@ class Site_Transients_Test extends TestCase {
 		Functions\expect( 'is_multisite' )->once()->andReturn( false );
 
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
-		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), $wpdb->options, Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
 		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( $dummy_result );
 
 		Functions\expect( 'get_current_network_id' )->never();
