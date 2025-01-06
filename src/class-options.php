@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,16 +52,18 @@ class Options {
 	/**
 	 * Retrieves an option value.
 	 *
-	 * @param string $option  The option name (without the plugin-specific prefix).
-	 * @param mixed  $default Optional. Default value to return if the option does not exist. Default null.
-	 * @param bool   $raw     Optional. Use the raw option name (i.e. don't call get_name). Default false.
+	 * @since 2.0.0 Parameter `$default` renamed to `$default_value`.
+	 *
+	 * @param string $option        The option name (without the plugin-specific prefix).
+	 * @param mixed  $default_value Optional. Default value to return if the option does not exist. Default null.
+	 * @param bool   $raw           Optional. Use the raw option name (i.e. don't call get_name). Default false.
 	 *
 	 * @return mixed Value set for the option.
 	 */
-	public function get( $option, $default = null, $raw = false ) {
-		$value = \get_option( $raw ? $option : $this->get_name( $option ), $default );
+	public function get( $option, $default_value = null, $raw = false ) {
+		$value = \get_option( $raw ? $option : $this->get_name( $option ), $default_value );
 
-		if ( is_array( $default ) && '' === $value ) {
+		if ( is_array( $default_value ) && '' === $value ) {
 			$value = [];
 		}
 
