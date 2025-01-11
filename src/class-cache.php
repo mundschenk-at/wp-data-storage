@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,14 +38,14 @@ class Cache extends Abstract_Cache {
 	 *
 	 * @var string
 	 */
-	private $incrementor_key;
+	private string $incrementor_key;
 
 	/**
 	 * The cache group.
 	 *
 	 * @var string
 	 */
-	private $group;
+	private string $group;
 
 	/**
 	 * Create new cache instance.
@@ -65,7 +65,7 @@ class Cache extends Abstract_Cache {
 	/**
 	 * Invalidate all cached elements by reseting the incrementor.
 	 */
-	public function invalidate() {
+	public function invalidate(): void {
 		$this->incrementor = time();
 		\wp_cache_set( $this->incrementor_key, $this->incrementor, $this->group, 0 );
 	}
@@ -78,7 +78,7 @@ class Cache extends Abstract_Cache {
 	 *
 	 * @return mixed
 	 */
-	public function get( $key, &$found = null ) {
+	public function get( string $key, ?bool &$found = null ) {
 		return \wp_cache_get( $this->get_key( $key ), $this->group, false, $found );
 	}
 
@@ -91,7 +91,7 @@ class Cache extends Abstract_Cache {
 	 *
 	 * @return bool True if the cache could be set successfully.
 	 */
-	public function set( $key, $value, $duration = 0 ) {
+	public function set( string $key, $value, int $duration = 0 ): bool {
 		return \wp_cache_set( $this->get_key( $key ), $value, $this->group, $duration );
 	}
 
@@ -102,7 +102,7 @@ class Cache extends Abstract_Cache {
 	 *
 	 * @return bool True on successful removal, false on failure.
 	 */
-	public function delete( $key ) {
+	public function delete( string $key ): bool {
 		return \wp_cache_delete( $this->get_key( $key ), $this->group );
 	}
 }

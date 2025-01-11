@@ -63,8 +63,7 @@ class Network_Options_Test extends TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function set_up() {
-		$this->options = m::mock( Network_Options::class )->makePartial();
-		$this->set_value( $this->options, 'network_id', self::NETWORK_ID, Network_Options::class );
+		$this->options = m::mock( Network_Options::class, [ 'my-prefix', self::NETWORK_ID ] )->makePartial();
 
 		parent::set_up();
 	}
@@ -77,11 +76,34 @@ class Network_Options_Test extends TestCase {
 	 * @uses \Mundschenk\Data_Storage\Abstract_Cache::__construct
 	 */
 	public function test___construct() {
-		$cache = m::mock( Network_Options::class, [ 'my_prefix', 666 ] )->makePartial();
+		$prefix     = 'some_prefix_';
+		$network_id = 5;
 
-		$this->assertInstanceOf( Network_Options::class, $cache );
-		$this->assert_attribute_same( 'my_prefix', 'prefix', $cache );
-		$this->assert_attribute_same( 666, 'network_id', $cache );
+		$network_options = m::mock( Network_Options::class, [ $prefix, $network_id ] )->makePartial();
+
+		$this->assertInstanceOf( Network_Options::class, $network_options );
+		$this->assert_attribute_same( $prefix, 'prefix', $network_options );
+		$this->assert_attribute_same( $network_id, 'network_id', $network_options );
+	}
+
+	/**
+	 * Tests constructor.
+	 *
+	 * @covers ::__construct
+	 *
+	 * @uses \Mundschenk\Data_Storage\Abstract_Cache::__construct
+	 */
+	public function test___construct_without_network_id() {
+		$prefix             = 'some_prefix_';
+		$current_network_id = 5;
+
+		Functions\expect( 'get_current_network_id' )->once()->withNoArgs()->andReturn( $current_network_id );
+
+		$network_options = m::mock( Network_Options::class, [ $prefix ] )->makePartial();
+
+		$this->assertInstanceOf( Network_Options::class, $network_options );
+		$this->assert_attribute_same( $prefix, 'prefix', $network_options );
+		$this->assert_attribute_same( $current_network_id, 'network_id', $network_options );
 	}
 
 	/**
