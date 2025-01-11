@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2018 Peter Putzer.
+ * Copyright 2017-2024 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,14 +38,14 @@ abstract class Abstract_Cache {
 	 *
 	 * @var int
 	 */
-	protected $incrementor;
+	protected int $incrementor;
 
 	/**
 	 * The prefix added to all keys.
 	 *
 	 * @var string
 	 */
-	private $prefix;
+	private string $prefix;
 
 	/**
 	 * Create new cache instance.
@@ -65,7 +65,7 @@ abstract class Abstract_Cache {
 	 *
 	 * @return void
 	 */
-	abstract public function invalidate();
+	abstract public function invalidate(): void;
 
 	/**
 	 * Retrieves a cached value.
@@ -74,7 +74,7 @@ abstract class Abstract_Cache {
 	 *
 	 * @return mixed
 	 */
-	abstract public function get( $key );
+	abstract public function get( string $key );
 
 	/**
 	 * Sets an entry in the cache and stores the key.
@@ -85,7 +85,7 @@ abstract class Abstract_Cache {
 	 *
 	 * @return bool True if the cache could be set successfully.
 	 */
-	abstract public function set( $key, $value, $duration = 0 );
+	abstract public function set( string $key, $value, int $duration = 0 ): bool;
 
 	/**
 	 * Deletes an entry from the cache.
@@ -94,7 +94,7 @@ abstract class Abstract_Cache {
 	 *
 	 * @return bool True on successful removal, false on failure.
 	 */
-	abstract public function delete( $key );
+	abstract public function delete( string $key ): bool;
 
 	/**
 	 * Retrieves the complete key to use.
@@ -103,7 +103,7 @@ abstract class Abstract_Cache {
 	 *
 	 * @return string
 	 */
-	protected function get_key( $key ) {
+	protected function get_key( string $key ): string {
 		return "{$this->prefix}{$this->incrementor}_{$key}";
 	}
 
@@ -112,7 +112,7 @@ abstract class Abstract_Cache {
 	 *
 	 * @return string
 	 */
-	protected function get_prefix() {
+	protected function get_prefix(): string {
 		return $this->prefix;
 	}
 }

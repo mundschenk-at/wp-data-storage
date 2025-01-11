@@ -38,7 +38,7 @@ class Network_Options extends Options {
 	 *
 	 * @var int
 	 */
-	private $network_id;
+	private int $network_id;
 
 	/**
 	 * Create new Network Options instance.
@@ -58,15 +58,15 @@ class Network_Options extends Options {
 	 * @since 2.0.0 Parameter `$default` renamed to `$default_value`.
 	 *
 	 * @param string $option       The option name (without the plugin-specific prefix).
-	 * @param mixed  $defaul_value Optional. Default value to return if the option does not exist. Default null.
+	 * @param mixed  $default_value Optional. Default value to return if the option does not exist. Default null.
 	 * @param bool   $raw          Optional. Use the raw option name (i.e. don't call get_name). Default false.
 	 *
 	 * @return mixed Value set for the option.
 	 */
-	public function get( $option, $defaul_value = null, $raw = false ) {
-		$value = \get_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ), $defaul_value );
+	public function get( string $option, $default_value = null, bool $raw = false ) {
+		$value = \get_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ), $default_value );
 
-		if ( is_array( $defaul_value ) && '' === $value ) {
+		if ( is_array( $default_value ) && '' === $value ) {
 			$value = [];
 		}
 
@@ -84,7 +84,7 @@ class Network_Options extends Options {
 	 *
 	 * @return bool False if value was not updated and true if value was updated.
 	 */
-	public function set( $option, $value, $autoload = true, $raw = false ) {
+	public function set( string $option, $value, bool $autoload = true, bool $raw = false ): bool {
 		return \update_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ), $value );
 	}
 
@@ -96,7 +96,7 @@ class Network_Options extends Options {
 	 *
 	 * @return bool True, if option is successfully deleted. False on failure.
 	 */
-	public function delete( $option, $raw = false ) {
+	public function delete( string $option, bool $raw = false ): bool {
 		return \delete_network_option( $this->network_id, $raw ? $option : $this->get_name( $option ) );
 	}
 }
