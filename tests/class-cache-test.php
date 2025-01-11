@@ -65,22 +65,47 @@ class Cache_Test extends TestCase {
 	}
 
 	/**
+	 * Provides data for testing ::__construct.
+	 *
+	 * @return array
+	 */
+	public function provide_test__construct_data(): array {
+		return [
+			'valid stored incrementor' => [ 55, 55 ],
+			'no stored incrementor'    => [ false, 0 ],
+			'empty string'             => [ '', 0 ],
+			'non-empty string'         => [ 'something', 0 ],
+			'null'                     => [ null, 0 ],
+			'object'                   => [ new \stdClass(), 0 ],
+			'float'                    => [ 10.5, 0 ],
+			'array'                    => [ [], 0 ],
+		];
+	}
+
+	/**
 	 * Tests constructor.
+	 *
+	 * @dataProvider provide_test__construct_data
 	 *
 	 * @covers ::__construct
 	 *
 	 * @uses \Mundschenk\Data_Storage\Abstract_Cache::__construct
+	 *
+	 * @param  mixed $stored_incrementor   The stored incrementor (return) value.
+	 * @param  int   $expected_incrementor The expected final incrementor value.
+	 *
+	 * @return void
 	 */
-	public function test___construct() {
-		Functions\expect( 'wp_cache_get' )->once()->with( 'some_prefix_cache_incrementor', self::GROUP )->andReturn( 0 );
+	public function test___construct( $stored_incrementor, int $expected_incrementor ) {
+		$cache = m::mock( Cache::class )->makePartial();
 
-		$cache = m::mock( Cache::class )->makePartial()
-			->shouldReceive( 'invalidate' )->once()
-			->getMock();
+		Functions\expect( 'wp_cache_get' )->once()->with( 'some_prefix_cache_incrementor', self::GROUP )->andReturn( $stored_incrementor );
+		$cache->shouldReceive( 'invalidate' )->times( 0 === $expected_incrementor ? 1 : 0 );
 
 		$cache->__construct( 'some_prefix_', self::GROUP );
 
 		$this->assertInstanceOf( Cache::class, $cache );
+		$this->assert_attribute_same( $expected_incrementor, 'incrementor', $cache );
 	}
 
 	/**

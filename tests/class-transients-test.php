@@ -67,20 +67,46 @@ class Transients_Test extends TestCase {
 	}
 
 	/**
+	 * Provides data for testing ::__construct.
+	 *
+	 * @return array
+	 */
+	public function provide_test__construct_data(): array {
+		return [
+			'valid stored incrementor' => [ 55, 55 ],
+			'no stored incrementor'    => [ false, 0 ],
+			'empty string'             => [ '', 0 ],
+			'non-empty string'         => [ 'something', 0 ],
+			'null'                     => [ null, 0 ],
+			'object'                   => [ new \stdClass(), 0 ],
+			'float'                    => [ 10.5, 0 ],
+			'array'                    => [ [], 0 ],
+		];
+	}
+
+	/**
 	 * Tests constructor.
+	 *
+	 * @dataProvider provide_test__construct_data
 	 *
 	 * @covers ::__construct
 	 *
 	 * @uses \Mundschenk\Data_Storage\Abstract_Cache::__construct
+	 *
+	 * @param  mixed $stored_incrementor   The stored incrementor (return) value.
+	 * @param  int   $expected_incrementor The expected final incrementor value.
+	 *
+	 * @return void
 	 */
-	public function test___construct() {
-		$transients = m::mock( Transients::class )->shouldAllowMockingProtectedMethods()->makePartial()
-			->shouldReceive( 'get' )->once()->with( 'some_prefix_transients_incrementor', true )->andReturn( 0 )
-			->shouldReceive( 'invalidate' )->once()
-			->getMock();
+	public function test___construct( $stored_incrementor, int $expected_incrementor ) {
+		$transients = m::mock( Transients::class )->shouldAllowMockingProtectedMethods()->makePartial();
+		$transients->shouldReceive( 'get' )->once()->with( 'some_prefix_transients_incrementor', true )->andReturn( $stored_incrementor );
+		$transients->shouldReceive( 'invalidate' )->times( 0 === $expected_incrementor ? 1 : 0 );
+
 		$transients->__construct( 'some_prefix_' );
 
 		$this->assertInstanceOf( Transients::class, $transients );
+		$this->assert_attribute_same( $expected_incrementor, 'incrementor', $transients );
 	}
 
 	/**
