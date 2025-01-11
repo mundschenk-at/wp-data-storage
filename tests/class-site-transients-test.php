@@ -155,7 +155,34 @@ class Site_Transients_Test extends TestCase {
 	}
 
 	/**
-	 * Tests get_keys_from_database in multisite.
+	 * Tests get_keys_from_database in multisite with no transients found.
+	 *
+	 * @covers ::get_keys_from_database
+	 */
+	public function test_get_keys_from_database_multisite_no_transients() {
+		// Prepare test dummies.
+		global $wpdb;
+		$wpdb           = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wpdb->sitemeta = 'wp_sitemeta';
+
+		if ( ! defined( 'ARRAY_A' ) ) {
+			define( 'ARRAY_A', 'array' );
+		}
+
+		Functions\expect( 'is_multisite' )->once()->andReturn( true );
+
+		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), $wpdb->sitemeta, Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%', 1 )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( null );
+
+		Functions\expect( 'get_current_network_id' )->once()->with()->andReturn( 1 );
+		Functions\expect( 'wp_list_pluck' )->once()->with( [], 'meta_key' )->andReturn( [] );
+
+		$this->assertSame( [], $this->transients->get_keys_from_database() );
+	}
+
+	/**
+	 * Tests get_keys_from_database in singlesite.
 	 *
 	 * @covers ::get_keys_from_database
 	 *
@@ -183,6 +210,35 @@ class Site_Transients_Test extends TestCase {
 		Functions\expect( 'wp_list_pluck' )->once()->with( $dummy_result, 'option_name' )->andReturn( [ 'typo_foobar' ] );
 
 		$this->assertSame( [ 'typo_foobar' ], $this->transients->get_keys_from_database() );
+	}
+
+	/**
+	 * Tests get_keys_from_database in singlesite with no transients found.
+	 *
+	 * @covers ::get_keys_from_database
+	 *
+	 * @uses \Mundschenk\Data_Storage\Transients::get_keys_from_database
+	 */
+	public function test_get_keys_from_database_singlesite_no_transients() {
+		// Prepare test dummies.
+		global $wpdb;
+		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wpdb->options = 'wp_options';
+
+		if ( ! defined( 'ARRAY_A' ) ) {
+			define( 'ARRAY_A', 'array' );
+		}
+
+		Functions\expect( 'is_multisite' )->once()->andReturn( false );
+
+		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), $wpdb->options, Site_Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( null );
+
+		Functions\expect( 'get_current_network_id' )->never();
+		Functions\expect( 'wp_list_pluck' )->once()->with( [], 'option_name' )->andReturn( [] );
+
+		$this->assertSame( [], $this->transients->get_keys_from_database() );
 	}
 
 	/**

@@ -151,6 +151,29 @@ class Transients_Test extends TestCase {
 	}
 
 	/**
+	 * Tests get_keys_from_database with no transients found.
+	 *
+	 * @covers ::get_keys_from_database
+	 */
+	public function test_get_keys_from_database_no_transients() {
+		global $wpdb;
+
+		if ( ! defined( 'ARRAY_A' ) ) {
+			define( 'ARRAY_A', 'array' );
+		}
+
+		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wpdb->options = 'wp_options';
+		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
+		$wpdb->shouldReceive( 'prepare' )->with( m::type( 'string' ), $wpdb->options, Transients::TRANSIENT_SQL_PREFIX . self::PREFIX . '%' )->andReturn( 'fake SQL string' );
+		$wpdb->shouldReceive( 'get_results' )->with( 'fake SQL string', ARRAY_A )->andReturn( null );
+
+		Functions\expect( 'wp_list_pluck' )->once()->with( [], 'option_name' )->andReturn( [] );
+
+		$this->assertSame( [], $this->transients->get_keys_from_database() );
+	}
+
+	/**
 	 * Tests get.
 	 *
 	 * @covers ::get

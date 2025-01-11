@@ -60,9 +60,16 @@ class Site_Transients extends Transients {
 				\get_current_network_id()
 			),
 			ARRAY_A
-		);
+		) ?? [];
 
-		return \str_replace( self::TRANSIENT_SQL_PREFIX, '', \wp_list_pluck( $results, 'meta_key' ) );
+		/**
+		 * Retrieve the list of transients.
+		 *
+		 * @var string[] $meta_keys
+		 */
+		$meta_keys = \wp_list_pluck( $results, 'meta_key' );
+
+		return \str_replace( self::TRANSIENT_SQL_PREFIX, '', $meta_keys );
 	}
 
 	/**
