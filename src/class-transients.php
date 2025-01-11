@@ -97,9 +97,16 @@ class Transients extends Abstract_Cache {
 				static::TRANSIENT_SQL_PREFIX . "{$this->get_prefix()}%"
 			),
 			ARRAY_A
-		);
+		) ?? [];
 
-		return \str_replace( static::TRANSIENT_SQL_PREFIX, '', \wp_list_pluck( $results, 'option_name' ) );
+		/**
+		 * Retrieve the list of transients.
+		 *
+		 * @var string[] $option_names
+		 */
+		$option_names = \wp_list_pluck( $results, 'option_name' );
+
+		return \str_replace( static::TRANSIENT_SQL_PREFIX, '', $option_names );
 	}
 
 	/**
