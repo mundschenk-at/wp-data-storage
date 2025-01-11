@@ -55,7 +55,11 @@ class Transients extends Abstract_Cache {
 	 */
 	public function __construct( string $prefix ) {
 		$this->incrementor_key = $prefix . 'transients_incrementor';
-		$this->incrementor     = $this->get( $this->incrementor_key, true );
+
+		$incrementor = $this->get( $this->incrementor_key, true );
+		$incrementor = \is_int( $incrementor ) ? $incrementor : 0;
+
+		$this->incrementor = $incrementor;
 
 		parent::__construct( $prefix );
 	}
@@ -133,7 +137,7 @@ class Transients extends Abstract_Cache {
 	 */
 	public function get_large_object( string $key, array $allowed_classes ) {
 		$encoded = $this->get( $key );
-		if ( false === $encoded ) {
+		if ( ! \is_string( $encoded ) ) {
 			return false;
 		}
 
