@@ -28,3 +28,16 @@
  * Autoload everything using Composer.
  */
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
+
+if ( ! defined( 'ARRAY_A' ) ) {
+	define( 'ARRAY_A', 'ARRAY_A' );
+}
+if ( ! defined( 'ARRAY_N' ) ) {
+	define( 'ARRAY_N', 'ARRAY_N' );
+}
+if ( ! defined( 'OBJECT' ) ) {
+	define( 'OBJECT', 'OBJECT' );
+}
+if ( ! defined( 'OBJECT_K' ) ) {
+	define( 'OBJECT_K', 'OBJECT_K' );
+}

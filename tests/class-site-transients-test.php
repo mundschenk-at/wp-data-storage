@@ -138,10 +138,6 @@ class Site_Transients_Test extends TestCase {
 		$wpdb           = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->sitemeta = 'wp_sitemeta';
 
-		if ( ! defined( 'ARRAY_A' ) ) {
-			define( 'ARRAY_A', 'array' );
-		}
-
 		Functions\expect( 'is_multisite' )->once()->andReturn( true );
 
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
@@ -164,10 +160,6 @@ class Site_Transients_Test extends TestCase {
 		global $wpdb;
 		$wpdb           = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->sitemeta = 'wp_sitemeta';
-
-		if ( ! defined( 'ARRAY_A' ) ) {
-			define( 'ARRAY_A', 'array' );
-		}
 
 		Functions\expect( 'is_multisite' )->once()->andReturn( true );
 
@@ -196,10 +188,6 @@ class Site_Transients_Test extends TestCase {
 		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
 
-		if ( ! defined( 'ARRAY_A' ) ) {
-			define( 'ARRAY_A', 'array' );
-		}
-
 		Functions\expect( 'is_multisite' )->once()->andReturn( false );
 
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
@@ -224,10 +212,6 @@ class Site_Transients_Test extends TestCase {
 		global $wpdb;
 		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
-
-		if ( ! defined( 'ARRAY_A' ) ) {
-			define( 'ARRAY_A', 'array' );
-		}
 
 		Functions\expect( 'is_multisite' )->once()->andReturn( false );
 

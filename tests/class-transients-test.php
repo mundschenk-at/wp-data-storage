@@ -134,11 +134,6 @@ class Transients_Test extends TestCase {
 		$dummy_result = [ [ 'option_name' => Transients::TRANSIENT_SQL_PREFIX . 'typo_foobar' ] ];
 
 		global $wpdb;
-
-		if ( ! defined( 'ARRAY_A' ) ) {
-			define( 'ARRAY_A', 'array' );
-		}
-
 		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
@@ -157,11 +152,6 @@ class Transients_Test extends TestCase {
 	 */
 	public function test_get_keys_from_database_no_transients() {
 		global $wpdb;
-
-		if ( ! defined( 'ARRAY_A' ) ) {
-			define( 'ARRAY_A', 'array' );
-		}
-
 		$wpdb          = m::mock( 'wpdb' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$wpdb->options = 'wp_options';
 		$this->transients->shouldReceive( 'get_prefix' )->once()->andReturn( self::PREFIX );
