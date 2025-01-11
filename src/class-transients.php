@@ -28,11 +28,17 @@ namespace Mundschenk\Data_Storage;
  * Implements an interface to the WordPress Transients API.
  *
  * @since 1.0.0
+ * @since 2.8.0 Obsolete method `maybe_fix_object` removed.
  *
  * @author Peter Putzer <github@mundschenk.at>
  */
 class Transients extends Abstract_Cache {
 
+	/**
+	 * The transient prefix.
+	 *
+	 * @var string
+	 */
 	const TRANSIENT_SQL_PREFIX = '_transient_';
 
 	/**
@@ -111,22 +117,31 @@ class Transients extends Abstract_Cache {
 	/**
 	 * Retrieves a cached large object.
 	 *
-	 * @param string $key The cache key.
+	 * @since 2.0.0 Parameter `$allowed_classes` added.
+	 *
+	 * @param string         $key             The cache key.
+	 * @param class-string[] $allowed_classes An array of allowed class names.
 	 *
 	 * @return mixed
 	 */
-	public function get_large_object( $key ) {
+	public function get_large_object( string $key, array $allowed_classes ) {
 		$encoded = $this->get( $key );
 		if ( false === $encoded ) {
 			return false;
 		}
 
-		$uncompressed = @\gzdecode( \base64_decode( $encoded ) ); // @codingStandardsIgnoreLine
+		$uncompressed = @\gzdecode( \base64_decode( $encoded ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 		if ( false === $uncompressed ) {
 			return false;
 		}
 
-		return $this->maybe_fix_object( \unserialize( $uncompressed ) ); // @codingStandardsIgnoreLine
+		$maybe_object = @\unserialize( $uncompressed, [ 'allowed_classes' => $allowed_classes ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+
+		if ( ! \is_object( $maybe_object ) || \__PHP_Incomplete_Class::class === \get_class( $maybe_object ) ) {
+			return false;
+		}
+
+		return $maybe_object;
 	}
 
 	/**
@@ -153,8 +168,8 @@ class Transients extends Abstract_Cache {
 	 *
 	 * @return bool True if the cache could be set successfully.
 	 */
-	public function set_large_object( $key, $value, $duration = 0 ) {
-		$compressed = \gzencode( \serialize( $value ) ); // @codingStandardsIgnoreLine
+	public function set_large_object( string $key, $value, int $duration = 0 ): bool {
+		$compressed = \gzencode( \serialize( $value ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 
 		if ( false === $compressed ) {
 			return false; // @codeCoverageIgnore
@@ -175,25 +190,5 @@ class Transients extends Abstract_Cache {
 	 */
 	public function delete( $key, $raw = false ) {
 		return \delete_transient( $raw ? $key : $this->get_key( $key ) );
-	}
-
-	/**
-	 * Tries to fix object cache implementations sometimes returning __PHP_Incomplete_Class.
-	 *
-	 * @since 2.0.0 Parameter `$object` renamed to `$maybe_object`.
-	 *
-	 * Originally based on http://stackoverflow.com/a/1173769/6646342 and refactored
-	 * for PHP 7.2 compatibility.
-	 *
-	 * @param  object $maybe_object An object that should have been unserialized, but may be of __PHP_Incomplete_Class.
-	 *
-	 * @return object               The object with its real class.
-	 */
-	protected function maybe_fix_object( $maybe_object ) {
-		if ( '__PHP_Incomplete_Class' === \get_class( $maybe_object ) ) {
-			$maybe_object = \unserialize( \serialize( $maybe_object ) ); // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize,WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-		}
-
-		return $maybe_object;
 	}
 }
