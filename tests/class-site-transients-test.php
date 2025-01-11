@@ -240,16 +240,13 @@ class Site_Transients_Test extends TestCase {
 	 * @covers ::get_large_object
 	 */
 	public function test_get_large_object() {
-		$raw_key = 'foo';
+		$raw_key             = 'foo';
+		$unserialized_object = new Large_Dummy_Object();
+		$blob                = \base64_encode( \gzencode( \serialize( $unserialized_object ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 
-		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( \base64_encode( \gzencode( \serialize( new \stdClass() ) ) ) ); // @codingStandardsIgnoreLine
-		$this->transients->shouldReceive( 'maybe_fix_object' )->once()->with( m::type( \stdClass::class ) )->andReturnUsing(
-			static function ( object $o ): object {
-				return $o;
-			}
-		);
+		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( $blob );
 
-		$this->assertInstanceOf( \stdClass::class, $this->transients->get_large_object( $raw_key ) );
+		$this->assertInstanceOf( Large_Dummy_Object::class, $this->transients->get_large_object( $raw_key, [ Large_Dummy_Object::class ] ) );
 	}
 
 	/**
@@ -262,7 +259,7 @@ class Site_Transients_Test extends TestCase {
 
 		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( false );
 
-		$this->assertFalse( $this->transients->get_large_object( $raw_key ) );
+		$this->assertFalse( $this->transients->get_large_object( $raw_key, [ Large_Dummy_Object::class ] ) );
 	}
 
 	/**
@@ -271,11 +268,28 @@ class Site_Transients_Test extends TestCase {
 	 * @covers ::get_large_object
 	 */
 	public function test_get_large_object_uncompression_failing() {
-		$raw_key = 'foo';
+		$raw_key             = 'foo';
+		$unserialized_object = new Large_Dummy_Object();
+		$blob                = \base64_encode( \serialize( $unserialized_object ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 
-		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( \base64_encode( \serialize( new \stdClass() ) ) ); // @codingStandardsIgnoreLine
+		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( $blob );
 
-		$this->assertFalse( $this->transients->get_large_object( $raw_key ) );
+		$this->assertFalse( $this->transients->get_large_object( $raw_key, [ Large_Dummy_Object::class ] ) );
+	}
+
+	/**
+	 * Tests get_large_object with failing uncompress.
+	 *
+	 * @covers ::get_large_object
+	 */
+	public function test_get_large_object_invalid_class() {
+		$raw_key             = 'foo';
+		$unserialized_object = new \stdClass();
+		$blob                = \base64_encode( \serialize( $unserialized_object ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode, WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+
+		$this->transients->shouldReceive( 'get' )->once()->with( $raw_key )->andReturn( $blob );
+
+		$this->assertFalse( $this->transients->get_large_object( $raw_key, [ Large_Dummy_Object::class ] ) );
 	}
 
 	/**
@@ -292,20 +306,5 @@ class Site_Transients_Test extends TestCase {
 		Functions\expect( 'delete_site_transient' )->once()->with( $key )->andReturn( true );
 
 		$this->assertTrue( $this->transients->delete( $raw_key ) );
-	}
-
-	/**
-	 * Test maybe_fix_object.
-	 *
-	 * @covers ::maybe_fix_object
-	 */
-	public function test_maybe_fix_object() {
-		$fake_object_string = 'O:16:"SomeMissingClass":1:{s:1:"a";s:1:"b";}';
-		$fake_object        = unserialize( $fake_object_string ); // @codingStandardsIgnoreLine
-
-		// Unfortunately, serialize and  unserialize cannot be mocked.
-		$object = $this->invoke_method( $this->transients, 'maybe_fix_object', [ $fake_object ] );
-
-		$this->assertTrue( $object !== $fake_object );
 	}
 }
