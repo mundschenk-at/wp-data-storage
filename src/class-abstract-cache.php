@@ -61,7 +61,7 @@ abstract class Abstract_Cache {
 	}
 
 	/**
-	 * Invalidate all cached elements by reseting the incrementor.
+	 * Invalidate all cached elements by resetting the incrementor.
 	 *
 	 * @return void
 	 */

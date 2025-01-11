@@ -25,7 +25,7 @@
 namespace Mundschenk\Data_Storage;
 
 /**
- * Implements an inteface to the WordPress Object Cache.
+ * Implements an interface to the WordPress Object Cache.
  *
  * @since 1.0.0
  *
@@ -67,7 +67,7 @@ class Cache extends Abstract_Cache {
 	}
 
 	/**
-	 * Invalidate all cached elements by reseting the incrementor.
+	 * Invalidate all cached elements by resetting the incrementor.
 	 */
 	public function invalidate(): void {
 		$this->incrementor = time();
