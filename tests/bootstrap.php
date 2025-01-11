@@ -21,7 +21,7 @@
  * @package mundschenk-at/wp-data-storage/tests
  * @license http://www.gnu.org/licenses/gpl-2.0.html
  *
- * @version 2.0-alpha.1
+ * @version 2.0.0
  */
 
 /**
