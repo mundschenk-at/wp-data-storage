@@ -57,8 +57,7 @@ class Transients extends Abstract_Cache {
 		$this->incrementor_key = $prefix . 'transients_incrementor';
 
 		$incrementor = $this->get( $this->incrementor_key, true );
-		$incrementor = \is_int( $incrementor ) ? $incrementor : 0;
-
+		$incrementor = \intval( $incrementor ) ? $incrementor : 0;
 		$this->incrementor = $incrementor;
 
 		parent::__construct( $prefix );
