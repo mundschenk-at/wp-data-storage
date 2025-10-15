@@ -59,7 +59,7 @@ class Cache extends Abstract_Cache {
 		$this->incrementor_key = "{$prefix}cache_incrementor";
 
 		$incrementor = \wp_cache_get( $this->incrementor_key, $this->group );
-		$incrementor = \is_int( $incrementor ) ? $incrementor : 0;
+		$incrementor = \intval( $incrementor ) ? $incrementor : 0;
 
 		$this->incrementor = $incrementor;
 
