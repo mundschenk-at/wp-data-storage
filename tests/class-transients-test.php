@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2024 Peter Putzer.
+ * Copyright 2017-2026 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -73,7 +73,9 @@ class Transients_Test extends TestCase {
 	 */
 	public function provide_test__construct_data(): array {
 		return [
-			'valid stored incrementor' => [ 55, 55 ],
+			'valid, stored as int'     => [ 55, 55 ],
+			'valid, stored as string'  => [ '55', 55 ],
+			'float, stored as string'  => [ '55.5', 0 ],
 			'no stored incrementor'    => [ false, 0 ],
 			'empty string'             => [ '', 0 ],
 			'non-empty string'         => [ 'something', 0 ],

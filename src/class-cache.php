@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2024 Peter Putzer.
+ * Copyright 2017-2026 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,11 +57,7 @@ class Cache extends Abstract_Cache {
 
 		$this->group           = ! isset( $group ) ? $prefix : $group;
 		$this->incrementor_key = "{$prefix}cache_incrementor";
-
-		$incrementor = \wp_cache_get( $this->incrementor_key, $this->group );
-		$incrementor = \is_int( $incrementor ) ? $incrementor : 0;
-
-		$this->incrementor = $incrementor;
+		$this->incrementor     = \filter_var( \wp_cache_get( $this->incrementor_key, $this->group ), \FILTER_VALIDATE_INT, \FILTER_NULL_ON_FAILURE ) ?? 0;
 
 		parent::__construct( $prefix );
 	}

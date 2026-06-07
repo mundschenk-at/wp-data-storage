@@ -2,7 +2,7 @@
 /**
  * This file is part of mundschenk-at/wp-data-storage.
  *
- * Copyright 2017-2024 Peter Putzer.
+ * Copyright 2017-2026 Peter Putzer.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,11 +55,7 @@ class Transients extends Abstract_Cache {
 	 */
 	public function __construct( string $prefix ) {
 		$this->incrementor_key = $prefix . 'transients_incrementor';
-
-		$incrementor = $this->get( $this->incrementor_key, true );
-		$incrementor = \is_int( $incrementor ) ? $incrementor : 0;
-
-		$this->incrementor = $incrementor;
+		$this->incrementor     = \filter_var( $this->get( $this->incrementor_key, true ), \FILTER_VALIDATE_INT, \FILTER_NULL_ON_FAILURE ) ?? 0;
 
 		parent::__construct( $prefix );
 	}
